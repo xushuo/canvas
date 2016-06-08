@@ -1,21 +1,111 @@
 <!doctype html>
 <html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Canvas</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Canvas</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="css/main.css">
-        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
-    </head>
-    <body>
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+
+<canvas id="canvas" style="border: 1px solid silver;margin:50px auto;display: block">
+
+</canvas>
+<script>
+    var WINDOW_WIDTH = 1024;
+    var WINDOW_HEIGHT = 768;
+
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        canvas.width = WINDOW_WIDTH;
+        canvas.height = WINDOW_HEIGHT;
+
+        var context = canvas.getContext('2d');
+        console.log(context);
+        if (context) {
+            /* context.beginPath();
+             context.moveTo(100,100);
+             context.lineTo(300,300);
+             context.lineTo(200,500);
+             context.lineTo(100,100);
+             context.fillStyle="red";
+             context.fill();
+             context.closePath();
+
+             context.beginPath();
+             context.moveTo(700,700);
+             context.lineTo(400,400);
+             context.lineTo(100,800);
+             context.lineTo(700,700);
+             context.fillStyle="green";
+             context.fill();
+             context.closePath();*/
+
+            /* context.beginPath();
+             context.lineWidth=3;
+             context.strokeStyle="red";
+             context.arc(300,300,200,0,1.5*Math.PI,true);//300 300 圆心，200半径， 0到0.5pi;true逆时针
+             context.closePath();//自动封闭路径
+             context.stroke();
+
+             context.fill();*/
+
+            render(context);
 
 
+        } else {
+            alert("该浏览器不支持canvas.");
+        }
 
-        <script src="js/vendor/jquery-1.9.1.js"></script>
-        <script src="js/plugins.js"></script>
-        <script src="js/main.js"></script>
-    </body>
+    }
+
+    function render(cxt) {
+        var hour=12;
+        var minutes=34;
+        var seconds=56;
+
+
+        renderDigit(0,50,parseInt(hour/10),cxt);
+        renderDigit(140,50,parseInt(hour%10),cxt);
+
+        renderDigit(260,50,10,cxt);
+
+        renderDigit(340,50,parseInt(minutes/10),cxt);
+        renderDigit(480,50,parseInt(minutes%10),cxt);
+
+        renderDigit(600,50,10,cxt);
+
+        renderDigit(680,50,parseInt(seconds/10),cxt);
+        renderDigit(820,50,parseInt(seconds%10),cxt);
+
+    }
+    function renderDigit(x,y,num,cxt){
+        cxt.fillStyle="blue";
+        for(var i=0;i<digit[num].length; i++){
+            for(var j=0; j<digit[num][i].length; j++){
+                //console.log(digit[num][i][j]);
+                if(digit[num][i][j]==1){
+                    cxt.beginPath();
+                    cxt.arc(x+(16*(j+1)),y+(16*(i+1)),7,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }else{
+
+                }
+            }
+        }
+    }
+
+
+</script>
+
+<script src="js/vendor/jquery-1.9.1.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+<script src="js/digit.js"></script>
+</body>
 </html>
