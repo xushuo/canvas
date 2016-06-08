@@ -18,6 +18,11 @@
 <script>
     var WINDOW_WIDTH = 1024;
     var WINDOW_HEIGHT = 768;
+    var RADIUS=8;
+    var MARGIN_TOP = 60;
+    var MARGIN_LEFT = 30;
+    const endTime = new Date(2016,5,8,18,16,32);
+    var curShowTimeSeconds = 0;
 
     window.onload = function () {
         var canvas = document.getElementById("canvas");
@@ -53,9 +58,12 @@
              context.stroke();
 
              context.fill();*/
+            curShowTimeSeconds=getCurShowTimeSeconds();
 
-            render(context);
-
+            setInterval(function(){
+                render(context);
+                update();
+            },50);
 
         } else {
             alert("该浏览器不支持canvas.");
@@ -63,16 +71,51 @@
 
     }
 
+    function update(){
+        var nextShowTimeSeconds = getCurShowTimeSeconds();
+        var nextHour=parseInt(nextShowTimeSeconds/3600);
+        var nextMinutes=parseInt((nextShowTimeSeconds-nextHour*3600)/60);
+        var nextSeconds=nextShowTimeSeconds%60;
+
+        var curHour=parseInt(curShowTimeSeconds/3600);
+        var curMinutes=parseInt((curShowTimeSeconds-curHour*3600)/60);
+        var curSeconds=curShowTimeSeconds%60;
+
+        if(nextSeconds!=curSeconds){
+            curShowTimeSeconds=nextShowTimeSeconds;
+        }
+    }
+
+    function getCurShowTimeSeconds(){
+        var curTime = new Date();
+        var ret = endTime.getTime()-curTime.getTime();
+        console.log(ret);
+        ret = Math.round(ret/1000);
+        return ret>=0?ret:0;
+    }
+
     function render(cxt) {
-        var hour=12;
-        var minutes=34;
-        var seconds=56;
 
+        cxt.clearRect(0,0,WINDOW_WIDTH,WINDOW_HEIGHT);//刷新
 
-        renderDigit(0,50,parseInt(hour/10),cxt);
-        renderDigit(140,50,parseInt(hour%10),cxt);
+        var hour=parseInt(curShowTimeSeconds/3600);
+        var minutes=parseInt((curShowTimeSeconds-hour*3600)/60);
+        var seconds=curShowTimeSeconds%60;
 
-        renderDigit(260,50,10,cxt);
+        renderDigit(MARGIN_LEFT,MARGIN_TOP,parseInt(hour/10),cxt);
+        renderDigit(MARGIN_LEFT+15*(RADIUS+1),MARGIN_TOP,parseInt(hour%10),cxt);
+
+        renderDigit(MARGIN_LEFT+30*(RADIUS+1),MARGIN_TOP,10,cxt);
+
+        renderDigit(MARGIN_LEFT+39*(RADIUS+1),MARGIN_TOP,parseInt(minutes/10),cxt);
+        renderDigit(MARGIN_LEFT+54*(RADIUS+1),MARGIN_TOP,parseInt(minutes%10),cxt);
+
+        renderDigit(MARGIN_LEFT+69*(RADIUS+1),MARGIN_TOP,10,cxt);
+
+        renderDigit(MARGIN_LEFT+78*(RADIUS+1),MARGIN_TOP,parseInt(seconds/10),cxt);
+        renderDigit(MARGIN_LEFT+93*(RADIUS+1),MARGIN_TOP,parseInt(seconds%10),cxt);
+
+        /*renderDigit(260,50,10,cxt);
 
         renderDigit(340,50,parseInt(minutes/10),cxt);
         renderDigit(480,50,parseInt(minutes%10),cxt);
@@ -80,7 +123,7 @@
         renderDigit(600,50,10,cxt);
 
         renderDigit(680,50,parseInt(seconds/10),cxt);
-        renderDigit(820,50,parseInt(seconds%10),cxt);
+        renderDigit(820,50,parseInt(seconds%10),cxt);*/
 
     }
     function renderDigit(x,y,num,cxt){
@@ -90,7 +133,8 @@
                 //console.log(digit[num][i][j]);
                 if(digit[num][i][j]==1){
                     cxt.beginPath();
-                    cxt.arc(x+(16*(j+1)),y+(16*(i+1)),7,0,2*Math.PI);
+                    /*cxt.arc(x+(16*(j+1)),y+(16*(i+1)),7,0,2*Math.PI);*/
+                    cxt.arc(x+j*2*(RADIUS+1)+(RADIUS+1),y+i*2*(RADIUS+1)+(RADIUS+1),RADIUS,0,2*Math.PI);
                     cxt.closePath();
                     cxt.fill();
                 }else{
